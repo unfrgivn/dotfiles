@@ -1,10 +1,11 @@
 {
   "$schema": "https://raw.githubusercontent.com/wpromote/oh-my-opencode/main/assets/oh-my-opencode.schema.json",
+  "google_auth": false,
   "agents": {
-    "OmO": {
+    "Sisyphus": {
       "model": "github-copilot/claude-opus-4.5"
     },
-    "OmO-Plan": {
+    "Planner-Sisyphus": {
       "model": "github-copilot/gpt-5.2"
     },
     "document-writer": {
@@ -18,6 +19,9 @@
     },
     "librarian": {
       "model": "github-copilot/claude-sonnet-4-5"
+    },
+    "multimodal-looker": {
+      "model": "github-copilot/gemini-3-pro-preview"
     },
     "oracle": {
       "model": "github-copilot/gpt-5.2"
