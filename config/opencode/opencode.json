@@ -6,6 +6,12 @@
       "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
     }
   },
+  "permission": {
+    "lsp": "allow",
+    "question": "allow",
+    "skill": "allow",
+    "webfetch": "allow"
+  },
   "plugin": [
     "oh-my-opencode",
     "open-trees",
