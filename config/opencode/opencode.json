@@ -8,6 +8,7 @@
   },
   "plugin": [
     "oh-my-opencode",
+    "open-trees",
     "opencode-antigravity-auth",
     "opencode-openai-codex-auth",
     "@tarquinen/opencode-dcp@latest"
