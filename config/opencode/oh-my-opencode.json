@@ -12,13 +12,13 @@
       "model": "github-copilot/gemini-3-pro-preview"
     },
     "explore": {
-      "model": "github-copilot/claude-sonnet-4-5"
+      "model": "github-copilot/claude-sonnet-4.5"
     },
     "frontend-ui-ux-engineer": {
       "model": "github-copilot/gemini-3-pro-preview"
     },
     "librarian": {
-      "model": "github-copilot/claude-sonnet-4-5"
+      "model": "github-copilot/claude-sonnet-4.5"
     },
     "multimodal-looker": {
       "model": "github-copilot/gemini-3-pro-preview"
