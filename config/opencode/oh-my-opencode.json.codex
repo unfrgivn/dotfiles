@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/wpromote/oh-my-opencode/main/assets/oh-my-opencode.schema.json",
+  "google_auth": false,
+  "agents": {
+    "Sisyphus": {
+      "model": "openai/gpt-5.2-codex"
+    },
+    "Planner-Sisyphus": {
+      "model": "openai/gpt-5.2"
+    },
+    "document-writer": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "explore": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "frontend-ui-ux-engineer": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "librarian": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "multimodal-looker": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "oracle": {
+      "model": "openai/gpt-5.2"
+    }
+  }
+}
