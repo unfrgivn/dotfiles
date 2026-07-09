@@ -7,7 +7,11 @@ return {
 			local builtin = require("telescope.builtin")
 			local find_files = function()
 				builtin.find_files({
-					find_command = { "rg", "--files", "--hidden", "--no-ignore", "--glob", "!.git/*" },
+					find_command = {
+						"sh",
+						"-c",
+						[[(rg --files --hidden --glob '!.git/*'; rg --files --hidden --no-ignore --glob '**/.env*' --glob '!.git/*') | sort -u]],
+					},
 				})
 			end
 
