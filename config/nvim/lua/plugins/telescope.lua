@@ -5,14 +5,20 @@ return {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			local builtin = require("telescope.builtin")
+			local find_files = function()
+				builtin.find_files({
+					find_command = { "rg", "--files", "--hidden", "--no-ignore", "--glob", "!.git/*" },
+				})
+			end
+
 			vim.keymap.set("n", "<C-p>", function()
-				builtin.find_files({ hidden = true })
+				find_files()
 			end, { desc = "Find files" })
 			vim.keymap.set("n", "<leader>tg", builtin.live_grep, { desc = "Telescope live grep" })
 			vim.keymap.set("n", "<leader>tf", function()
 				local ok = pcall(builtin.git_files)
 				if not ok then
-					builtin.find_files({ hidden = true })
+					find_files()
 				end
 			end, { desc = "Telescope git files" })
 		end,
