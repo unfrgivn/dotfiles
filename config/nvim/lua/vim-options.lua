@@ -1,7 +1,12 @@
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
-vim.cmd("set softtabstop=2")
-vim.cmd("set shiftwidth=2")
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
 
 -- Make sure to setup `mapleader` and `maplocalleader` before
 -- loading lazy.nvim so that mappings are correct.
@@ -21,10 +26,24 @@ keymap("n", "<C-l>", "<C-w>l", default_opts)
 keymap("n", "<C-j>", "<C-w>j", default_opts)
 keymap("n", "<C-k>", "<C-w>k", default_opts)
 
--- Switch Buffer
-keymap("n", "<S-h>", ":bprevious<CR>", default_opts)
-keymap("n", "<S-l>", ":bnext<CR>", default_opts)
+-- Switch buffer, skipping special buffers (neo-tree, terminals, quickfix, etc.)
+local function cycle_buffer(direction)
+	local start = vim.api.nvim_get_current_buf()
+	local cmd = direction == "next" and "bnext" or "bprevious"
+	vim.cmd(cmd)
+	while vim.bo.buftype ~= "" and vim.api.nvim_get_current_buf() ~= start do
+		vim.cmd(cmd)
+	end
+end
+vim.keymap.set("n", "<S-h>", function()
+	cycle_buffer("prev")
+end, { noremap = true, silent = true })
+vim.keymap.set("n", "<S-l>", function()
+	cycle_buffer("next")
+end, { noremap = true, silent = true })
 
 keymap("n", "<ESC>", ":nohlsearch<Bar>:echo<CR>", default_opts)
 
 keymap("n", "jk", "<ESC>", default_opts)
+
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
