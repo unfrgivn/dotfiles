@@ -14,6 +14,12 @@ return {
 	---@type AutoSession.Config
 	opts = {
 		cwd_change_handling = true,
+		bypass_save_filetypes = { "neo-tree", "alpha" },
+		pre_save_cmds = {
+			function()
+				pcall(vim.cmd, "Neotree close")
+			end,
+		},
 		-- The following are already the default values, no need to provide them if these are already the settings you want.
 		session_lens = {
 			picker = "telescope",
