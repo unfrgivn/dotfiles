@@ -5,6 +5,9 @@ font-family = MesloLGS NF
 font-size = 12
 theme = catppuccin-macchiato.conf
 shell-integration-features = no-cursor,sudo,no-title
+
+command = ~/.config/ghostty/start-tmux-ghostty.sh
+
 cursor-style = block
 adjust-cell-height = 35%
 # background-opacity = 0.96
