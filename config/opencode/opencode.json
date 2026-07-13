@@ -3,20 +3,31 @@
   "mcp": {
     "chrome-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--autoConnect"]
     }
+    // "miro-mcp": {
+    //  "type": "remote",
+    //  "url": "https://mcp.miro.com/",
+    //  "oauth": {}
+    //}
+  },
+  "experimental": {
+    "disable_paste_summary": true
   },
   "permission": {
     "lsp": "allow",
     "question": "allow",
     "skill": "allow",
-    "webfetch": "allow"
+    "webfetch": "allow",
+    "external_directory": {
+      "~/.cache/opencode/**": "allow",
+      "~/.config/opencode/**": "allow"
+    }
   },
   "plugin": [
-    "oh-my-opencode",
-    "open-trees",
-    "opencode-antigravity-auth",
-    "@tarquinen/opencode-dcp@latest"
-  ],
-  "theme": "catppuccin-macchiato"
+    "@tarquinen/opencode-dcp@latest",
+    "@wpro-eng/opencode-config"
+  ]
+  //"plugin": ["/Users/bash/Sites/wpromote/opencode-config"]
+  // "plugin": ["@wpro-eng/opencode-config@v1.15.0"]
 }
