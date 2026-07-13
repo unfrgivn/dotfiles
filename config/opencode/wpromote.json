@@ -1,0 +1,41 @@
+{
+  "agentNames": "lotr",
+  "models": {
+    "aragorn": "openai/gpt-5.5",
+    "celebrimbor": "openai/gpt-5.5",
+    "gandalf": "openai/gpt-5.5",
+    "galadriel": "github-copilot/gemini-3.1-pro-preview"
+  },
+  "preset": "github-copilot",
+  "presets": {
+    "github-copilot": {
+      "description": "GitHub Copilot-backed defaults. Fill model overrides here after re-pasting the slim model IDs.",
+      "models": {}
+    },
+    "openai": {
+      "description": "OpenAI-backed defaults. Fill model overrides here after re-pasting the slim model IDs.",
+      "models": {}
+    },
+    "opencode-go": {
+      "description": "Opencode Go defaults. Fill model overrides here after re-pasting the slim model IDs.",
+      "models": {}
+    }
+  },
+  "orchestration": {
+    "tmux": {
+      "enabled": false,
+      "mode": "pane",
+      "layout": "main-vertical",
+      "mainPaneSize": 60
+    }
+  },
+  "companion": {
+    "enabled": true,
+    "position": "bottom-right",
+    "size": "medium",
+    "gifPack": "default",
+    "loopStyle": "classic",
+    "speed": 1,
+    "debug": false
+  }
+}
