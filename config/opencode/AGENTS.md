@@ -54,6 +54,7 @@
 - Test `EVERYTHING`. Tests must be rigorous. Our intent is ensuring a new person contributing to the same code base cannot break our stuff and that nothing slips by. We love rigour.
 - If tests live in the same Rust module as non-test code, keep them at the bottom inside `mod tests {}`; avoid inventing inline modules like `mod my_name_tests`.
 - Unless the user asks otherwise, run only the tests you added or modified instead of the entire suite to avoid wasting time.
+- Design for testability using "functional core, imperative shell": keep pure business logic separate from code that does IO.
 
 ## Language Guidance
 
