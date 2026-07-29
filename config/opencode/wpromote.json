@@ -1,9 +1,9 @@
 {
   "agentNames": "lotr",
   "models": {
-    "aragorn": "openai/gpt-5.5",
-    "celebrimbor": "openai/gpt-5.5",
-    "gandalf": "openai/gpt-5.5",
+    "aragorn": "openai/gpt-5.6-sol",
+    "celebrimbor": "openai/gpt-5.6-sol",
+    "gandalf": "openai/gpt-5.6-sol",
     "galadriel": "github-copilot/gemini-3.1-pro-preview"
   },
   "preset": "github-copilot",
