@@ -8,3 +8,10 @@ __pycache__/
 
 
 logs/
+# OpenCode generated assets and local runtime files
+/config/opencode/skill/_plugins/
+/config/opencode/mcp/_plugins/
+/config/opencode/schemas/wpromote.schema.json
+/config/opencode/service.json
+/config/opencode/opencode.json.local
+/config/opencode/package-lock.json
