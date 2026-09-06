@@ -13,7 +13,7 @@
 | Starting a task               | Read this guide end-to-end and align with any fresh user instructions.                                   |
 | Tool or command hangs         | If a command runs longer than 5 minutes, stop it, capture logs, and check with the user.                 |
 | Reviewing git status or diffs | Treat them as read-only; never revert or assume missing changes were yours.                              |
-| Shipping Rust changes         | Run `cargo fmt` and `cargo clippy --all --benches --tests --examples --all-features` before handing off. |
+| Shipping Rust changes         | Run targeted formatting and clippy for affected Rust work before handing off; use `cargo fmt` and `cargo clippy --all --benches --tests --examples --all-features` only when required by the project gate or warranted by broad risk. |
 | Adding a dependency           | Research well-maintained options and confirm fit with the user before adding.                            |
 
 ## Mindset & Process
@@ -22,7 +22,7 @@
 - **No breadcrumbs**. If you delete or move code, do not leave a comment in the old place. No "// moved to X", no "relocated". Just remove it.
 - **Think hard, do not lose the plot**.
 - Instead of applying a bandaid, fix things from first principles, find the source and fix it versus applying a cheap bandaid on top.
-- When taking on new work, follow this order:
+- For work involving consequential architecture or uncertain external APIs, when taking on new work, follow this order:
   1. Think about the architecture.
   1. Research official docs, blogs, or papers on the best architecture.
   1. Review the existing codebase.
@@ -31,7 +31,7 @@
 - Write idiomatic, simple, maintainable code. Always ask yourself if this is the most simple intuitive solution to the problem.
 - Leave each repo better than how you found it. If something is giving a code smell, fix it for the next person.
 - Clean up unused code ruthlessly. If a function no longer needs a parameter or a helper is dead, delete it and update the callers instead of letting the junk linger.
-- **Search before pivoting**. If you are stuck or uncertain, do a quick web search for official docs or specs, then continue with the current approach. Do not change direction unless asked.
+- **Search before pivoting**. When external facts are missing, do a quick web search for official docs or specs, then continue with the current approach. Do not change direction unless asked.
 - If code is very confusing or hard to understand:
   1. Try to simplify it.
   1. Add an ASCII art diagram in a code comment if it would help.
@@ -40,8 +40,8 @@
 
 - **Task runner preference**. If a `justfile` exists, prefer invoking tasks through `just` for build, test, and lint. Do not add a `justfile` unless asked. If no `justfile` exists and there is a `Makefile` you can use that.
 - Default lint/test commands:
-  - Rust: use `just` targets if present; otherwise run `cargo fmt`, `cargo clippy --all --benches --tests --examples --all-features`, then the targeted `cargo test` commands.
-  - TypeScript: use `just` targets; if none exist, confirm with the user before running `npm` or `pnpm` scripts.
+  - Rust: use scoped `just` targets or affected-package commands if present; otherwise run targeted `cargo fmt` and `cargo clippy` for the affected Rust work, then the targeted `cargo test` commands. Run `cargo fmt` and `cargo clippy --all --benches --tests --examples --all-features` only when required by the project gate or warranted by broad risk.
+  - TypeScript: use `just` targets; if none exist, run safe repository/package-manager scripts, including `npm`, `pnpm`, `bun`, and similar commands, autonomously. Fix failures caused by the current change and rerun relevant checks without repeated approval.
   - Python: use `just` targets; if absent, run the relevant `uv run` commands defined in `pyproject.toml`.
 - **AST-first where it helps**. Prefer `ast-grep` for tree-safe edits when it is better than regex.
 - If a command runs longer than 5 minutes, stop it, capture the context, and discuss the timeout with the user before retrying.
@@ -51,9 +51,9 @@
 ## Testing Philosophy
 
 - I HATE MOCK tests, either do unit or e2e, nothing inbetween. Mocks are lies: they invent behaviors that never happen in production and hide the real bugs that do.
-- Test `EVERYTHING`. Tests must be rigorous. Our intent is ensuring a new person contributing to the same code base cannot break our stuff and that nothing slips by. We love rigour.
+- Test relevant existing and new behavior based on affected behavior and risk. Run the full suite only when required by the project gate or warranted by broad risk; avoid repeating unaffected checks.
 - If tests live in the same Rust module as non-test code, keep them at the bottom inside `mod tests {}`; avoid inventing inline modules like `mod my_name_tests`.
-- Unless the user asks otherwise, run only the tests you added or modified instead of the entire suite to avoid wasting time.
+- Unless the user asks otherwise, run affected existing or new tests first, then impacted checks; avoid repeating unaffected checks.
 - Design for testability using "functional core, imperative shell": keep pure business logic separate from code that does IO.
 
 ## Language Guidance
@@ -68,8 +68,8 @@
 
 #### Rust Workflow Checklist
 
-1. Run `cargo fmt`.
-1. Run `cargo clippy --all --benches --tests --examples --all-features` and address warnings.
+1. Run targeted `cargo fmt` for the affected Rust work, or the relevant `just` target.
+1. Run targeted `cargo clippy` for the affected Rust work, or the relevant `just` target, and address warnings. Run `cargo clippy --all --benches --tests --examples --all-features` only when required by the project gate or warranted by broad risk.
 1. Execute the relevant `cargo test` or `just` targets to cover unit and end-to-end paths.
 
 ### TypeScript
@@ -111,4 +111,4 @@ Before finishing a task:
 ## Environment & Setup
 
 - **Homebrew default**, prefer Homebrew for installing CLIs on macOS or Linux unless the user specifies otherwise.
-- **Nix fallback**. I use Nix locally. If the environment fails, add or update `flake.nix` (and `flake.lock` if missing), expose `devShells.default`. Do not run `nix` commands yourself that change the environment. But if the user says you can run it you can.
+- **Nix fallback**. I use Nix locally. If the environment fails, diagnose and propose adding or updating `flake.nix` (and `flake.lock` if missing) before making that change. Do not run `nix` commands yourself that change the environment without explicit user authorization. If authorized, expose `devShells.default`.
