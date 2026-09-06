@@ -1,32 +1,32 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "chrome-devtools": {
-      "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--autoConnect"]
+    "servers": {
+      "chrome-devtools": {
+        "type": "local",
+        "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--autoConnect"]
+      },
+      // "miro-mcp": {
+      //  "type": "remote",
+      //  "url": "https://mcp.miro.com/",
+      //  "oauth": {}
+      //}
     }
-    // "miro-mcp": {
-    //  "type": "remote",
-    //  "url": "https://mcp.miro.com/",
-    //  "oauth": {}
-    //}
   },
   "experimental": {
     "disable_paste_summary": true
   },
-  "permission": {
-    "lsp": "allow",
-    "question": "allow",
-    "skill": "allow",
-    "webfetch": "allow",
-    "external_directory": {
-      "~/.cache/opencode/**": "allow",
-      "~/.config/opencode/**": "allow"
-    }
-  },
-  "plugin": [
-    "@tarquinen/opencode-dcp@latest",
-    "@wpro-eng/opencode-config"
+  "permissions": [
+    {"action": "lsp", "resource": "*", "effect": "allow"},
+    {"action": "question", "resource": "*", "effect": "allow"},
+    {"action": "skill", "resource": "*", "effect": "allow"},
+    {"action": "webfetch", "resource": "*", "effect": "allow"},
+    {"action": "external_directory", "resource": "~/.cache/opencode/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "~/.config/opencode/**", "effect": "allow"}
+  ],
+  "plugins": [
+    // "@tarquinen/opencode-dcp@latest",
+    // "file:///Users/bash/Sites/wpromote/opencode-config/dist/index.js"
   ]
   //"plugin": ["/Users/bash/Sites/wpromote/opencode-config"]
   // "plugin": ["@wpro-eng/opencode-config@v1.15.0"]

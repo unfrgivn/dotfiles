@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "theme": {
+    "name": "catppuccin-macchiato"
+  },
+  "plugins": [
+    "file:///Users/bash/Sites/wpromote/opencode-config/dist/tui.js"
+  ],
+  "session": {
+    "sidebar": "auto",
+    "scrollbar": false,
+    "thinking": "show"
+  },
+  "animations": true,
+  "tabs": {
+    "enabled": false
+  }
+}
