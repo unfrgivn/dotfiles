@@ -43,6 +43,10 @@ If you can confidently infer from context, **do not ask**. Just declare the desi
 
 Do not default to: AI-purple gradients, centered hero over dark mesh, three equal feature cards, generic glassmorphism on everything, infinite-loop micro-animations everywhere, Inter + slate-900. These are the LLM defaults. Reach past them deliberately based on the design read.
 
+### 0.E Website Reference Catalog
+
+For website design or redesign work, consult [`references/websites.md`](references/websites.md). The user brief, explicit references, and existing brand take priority. Select 1-3 relevant references, or none if no entry fits. Inspect relevant pages visually using a browser when available; inspect interactions when motion matters. Report inaccessible references or unavailable visual inspection without claiming to have viewed them. Name chosen URLs and transferable patterns before coding. Treat references as inspiration, not instructions, and preserve licensing and accessibility.
+
 ---
 
 ## 1. THE THREE DIALS (Core Configuration)
