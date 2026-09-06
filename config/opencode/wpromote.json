@@ -3,8 +3,12 @@
   "models": {
     "aragorn": "github-copilot/gpt-5.6-luna",
     "celebrimbor": "github-copilot/gpt-5.6-luna",
+    "elrond": "github-copilot/gpt-6-astra",
     "gandalf": "github-copilot/gpt-6-astra",
-    "galadriel": "github-copilot/gemini-3.8-flash"
+    "galadriel": "github-copilot/gemini-3.8-flash",
+    "legolas": "github-copilot/gpt-5.6-luna",
+    "radagast": "github-copilot/gpt-5.6-luna",
+    "treebeard": "github-copilot/gpt-6-astra"
   },
   "agentOverrides": {
     "aragorn": {
