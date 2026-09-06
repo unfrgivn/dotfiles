@@ -1,10 +1,18 @@
 {
   "agentNames": "lotr",
   "models": {
-    "aragorn": "openai/gpt-5.6-sol",
-    "celebrimbor": "openai/gpt-5.6-sol",
-    "gandalf": "openai/gpt-5.6-sol",
-    "galadriel": "github-copilot/gemini-3.1-pro-preview"
+    "aragorn": "github-copilot/gpt-5.6-luna",
+    "celebrimbor": "github-copilot/gpt-5.6-luna",
+    "gandalf": "github-copilot/gpt-6-astra",
+    "galadriel": "github-copilot/gemini-3.8-flash"
+  },
+  "agentOverrides": {
+    "aragorn": {
+      "reasoningEffort": "xhigh"
+    },
+    "celebrimbor": {
+      "reasoningEffort": "xhigh"
+    }
   },
   "preset": "github-copilot",
   "presets": {
@@ -22,6 +30,10 @@
     }
   },
   "orchestration": {
+    "limits": {
+      "maxConcurrent": 3,
+      "maxConcurrentGlobal": 5
+    },
     "tmux": {
       "enabled": false,
       "mode": "pane",
