@@ -13,6 +13,8 @@
   },
   "animations": true,
   "tabs": {
-    "enabled": false
+    "enabled": false,
+    "layout": "vertical",
+    "mode": "on"
   }
 }

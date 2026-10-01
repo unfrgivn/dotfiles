@@ -15,3 +15,5 @@ logs/
 /config/opencode/service.json
 /config/opencode/opencode.json.local
 /config/opencode/package-lock.json
+# OpenCode remote skills plugin
+../../../.config/opencode/skill/_plugins/
