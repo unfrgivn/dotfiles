@@ -6,10 +6,6 @@
         "type": "local",
         "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--autoConnect"]
       },
-      "sentry": {
-        "type": "remote",
-        "url": "https://mcp.sentry.dev/mcp"
-      },
       // "miro-mcp": {
       //  "type": "remote",
       //  "url": "https://mcp.miro.com/",
