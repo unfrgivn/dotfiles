@@ -3,9 +3,6 @@
   "theme": {
     "name": "catppuccin-macchiato"
   },
-  "plugins": [
-    "file:///Users/bash/Sites/wpromote/opencode-config/dist/tui.js"
-  ],
   "session": {
     "sidebar": "auto",
     "scrollbar": false,
@@ -15,6 +12,6 @@
   "tabs": {
     "enabled": false,
     "layout": "vertical",
-    "mode": "on"
+    "mode": "auto"
   }
 }

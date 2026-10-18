@@ -1,0 +1,625 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/unfrgivn/opencode-config/main/fellowship.schema.json",
+  "title": "Fellowship OpenCode Configuration",
+  "description": "Configuration for @unfrgivn/opencode-config — the Fellowship OpenCode plugin that syncs bundled assets on startup. Place this file at .opencode/fellowship.json (or .jsonc) in your project, or at ~/.config/opencode/fellowship.json globally. User config loads first, project config is merged on top, and .jsonc wins over .json within the same directory.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path or URL to this JSON Schema for editor autocompletion."
+    },
+    "disable": {
+      "type": "array",
+      "description": "Asset disable list. Entries can be typed (\"skill:example\"), untyped (\"example\"), glob patterns (\"skill:deprecated-*\"), or negated (\"!skill:keep-this\"). Later entries override earlier ones.",
+      "default": [],
+      "items": {
+        "type": "string",
+        "examples": [
+          "skill:example",
+          "agent:heavy",
+          "instruction:**/*.md",
+          "!skill:keep-this",
+          "mcp:my-mcp",
+          "plugin:unused",
+          "internal-*"
+        ]
+      },
+      "examples": [
+        ["skill:example"],
+        ["skill:deprecated-*", "!skill:deprecated-but-keep"],
+        ["instruction:**/*.md"]
+      ]
+    },
+    "agentOverrides": {
+      "type": "object",
+      "description": "Partial patch-style overrides applied to bundled agent configs before injection. Use this to change specific values (for example temperature) without redefining the whole agent. Built-in bundled agents accept either descriptive or LOTR names as keys (for example `planner` or `treebeard`). Local opencode.json agent entries still take precedence and fully replace the bundled agent config.",
+      "default": {},
+      "additionalProperties": {
+        "type": "object",
+        "description": "Partial agent config patch for a bundled agent name.",
+        "additionalProperties": true,
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "tools": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
+          "disable": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["subagent", "primary", "all"]
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "steps": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "maxSteps": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "permission": {
+            "description": "Permission config. Supports full replacement of top-level keys; nested objects merge with bundled defaults during apply.",
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "enum": ["ask", "allow", "deny"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string",
+                        "enum": ["ask", "allow", "deny"]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "policy": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Per-agent policy controls for bundled agents. Tools and permission merge into the bundled agent before injection. MCP and skill entries synthesize permission rules; prefix an entry with ! to deny it.",
+            "properties": {
+              "tools": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "boolean"
+                }
+              },
+              "permission": {
+                "description": "Additional permission rules to merge into the bundled agent before injection.",
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "enum": ["ask", "allow", "deny"]
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "enum": ["ask", "allow", "deny"]
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "enum": ["ask", "allow", "deny"]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "mcps": {
+                "type": "array",
+                "description": "MCP allow/deny list for this agent. Example: [\"context7\", \"!chrome-devtools\"]. Positive entries make an allowlist for known bundled MCPs; deny-only entries make a blocklist. Use * for all discovered bundled MCPs.",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "type": "array",
+                "description": "Skill allow/deny list for this agent. Example: [\"*\", \"!terraform\"]. Positive entries make an allowlist; deny-only entries make a blocklist.",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples": [
+        {
+          "planner": {
+            "temperature": 0.2
+          }
+        },
+        {
+          "researcher": {
+            "model": "github-copilot/gpt-5.2",
+            "temperature": 0.3
+          }
+        },
+        {
+          "researcher": {
+            "policy": {
+              "mcps": ["context7", "exa", "!chrome-devtools"],
+              "skills": ["*", "!terraform"],
+              "permission": {
+                "bash": "deny"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "installMethod": {
+      "type": "string",
+      "enum": ["link", "copy"],
+      "default": "link",
+      "description": "How skills, plugins, and MCPs are installed locally. \"link\" creates symlinks (default, faster, auto-updates with package). \"copy\" creates independent copies."
+    },
+    "agentNames": {
+      "type": "string",
+      "enum": ["lotr", "descriptive"],
+      "default": "descriptive",
+      "description": "Agent naming theme. \"descriptive\" uses role-based names (orchestrator, explorer, etc.). \"lotr\" uses Tolkien character names (gandalf, legolas, etc.)."
+    },
+    "dryRun": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, analyzes what would change without writing any files. Useful for previewing sync behavior."
+    },
+    "preset": {
+      "type": "string",
+      "description": "Default named preset to apply on startup. Runtime selection from /preset or FELLOWSHIP_PRESET takes precedence."
+    },
+    "presets": {
+      "type": "object",
+      "default": {},
+      "description": "Named runtime-safe preset overlays. Presets can override agent models and orchestration settings, then apply on the next OpenCode restart.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "models": {
+            "$ref": "#/properties/models"
+          },
+          "orchestration": {
+            "$ref": "#/properties/orchestration"
+          }
+        }
+      },
+      "examples": [
+        {
+          "fast": {
+            "description": "Use cheaper/faster models for routine work.",
+            "models": {
+              "orchestrator": "github-copilot/gpt-5-mini",
+              "researcher": "github-copilot/gpt-5-mini"
+            },
+            "orchestration": {
+              "providerMode": "copilot",
+              "limits": {
+                "maxConcurrent": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "models": {
+      "type": "object",
+      "default": {},
+      "description": "Override the model used by bundled agents. Built-in bundled agents accept either descriptive or LOTR names as keys (for example `orchestrator` or `gandalf`), regardless of the active naming theme. Omitted agents or empty string values fall back to the plugin default.",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "examples": [
+        {
+          "orchestrator": "anthropic/claude-opus-4",
+          "explorer": "github-copilot/claude-sonnet-4.6"
+        }
+      ]
+    },
+    "companion": {
+      "type": "object",
+      "description": "Optional desktop companion integration. When enabled, Fellowship writes a companion state file and launches a managed, custom, or bundled companion binary. The bundled macOS companion opens a chromeless desktop image tile for busy or waiting agents and animates through SNES-style named sprite panels. Companion labels and art follow the top-level agentNames theme.",
+      "default": {},
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable companion state updates and best-effort binary launch."
+        },
+        "binaryPath": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to a custom companion binary to launch. If omitted, Fellowship checks its managed storage path, then falls back to the bundled companion binary."
+        },
+        "position": {
+          "type": "string",
+          "enum": ["bottom-right", "bottom-left", "top-right", "top-left"],
+          "default": "bottom-right",
+          "description": "Preferred companion window corner."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "medium", "large"],
+          "default": "medium",
+          "description": "Preferred companion window size."
+        },
+        "gifPack": {
+          "type": "string",
+          "enum": ["default"],
+          "default": "default",
+          "description": "Companion animation pack."
+        },
+        "loopStyle": {
+          "type": "string",
+          "enum": ["classic", "smooth"],
+          "default": "classic",
+          "description": "Companion animation playback style."
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 4,
+          "default": 1,
+          "description": "Companion animation speed multiplier."
+        },
+        "debug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable verbose companion debug behavior."
+        }
+      }
+    },
+    "orchestration": {
+      "type": "object",
+      "description": "Orchestration runtime configuration for delegation admission, concurrency, provider backpressure, recovery, and tmux integration.",
+      "default": {},
+      "additionalProperties": false,
+      "properties": {
+        "providerMode": {
+          "type": "string",
+          "enum": ["copilot", "native"],
+          "default": "copilot",
+          "description": "Default provider routing mode for subagent tasks."
+        },
+        "features": {
+          "type": "object",
+          "description": "Feature toggles for orchestration capabilities.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "delegation": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable task delegation to subagents."
+            },
+            "diagnostics": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable the /diagnostics command."
+            },
+            "vision": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable the vision multimodal analysis tool."
+            },
+            "continuousLoop": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable continuous loop mode via /continue."
+            },
+            "selfHealing": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable provider congestion backpressure. Failed task calls are not automatically retried."
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "description": "Concurrency, retry, and timeout limits for delegated tasks.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "maxConcurrent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 3,
+              "description": "Maximum number of concurrent delegated subagent tasks in one parent OpenCode session."
+            },
+            "maxConcurrentGlobal": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 5,
+              "description": "Maximum concurrent delegated tasks across local OpenCode processes sharing this cache."
+            },
+            "providerMaxConcurrent": {
+              "type": "object",
+              "default": {},
+              "description": "Optional local concurrent task caps by provider. Omitted providers use maxConcurrentGlobal.",
+              "additionalProperties": false,
+              "properties": {
+                "copilot": { "type": "integer", "minimum": 1, "maximum": 100 },
+                "native": { "type": "integer", "minimum": 1, "maximum": 100 }
+              }
+            },
+            "maxRetries": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5,
+              "default": 2,
+              "description": "Deprecated compatibility setting. The runtime does not automatically retry task calls."
+            },
+            "maxIterations": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25,
+              "description": "Maximum agentic iterations per task."
+            },
+            "retryBackoffMs": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 60000,
+              "default": 1500,
+              "description": "Deprecated compatibility setting. The runtime does not schedule retry attempts."
+            },
+            "taskTimeoutMs": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 900000,
+              "default": 120000,
+              "description": "Task timeout in milliseconds (default: 2 minutes)."
+            }
+          }
+        },
+        "runtimeFallback": {
+          "type": "object",
+          "description": "Provider congestion backpressure settings plus backward-compatible legacy fallback fields. The runtime does not replay or retry task calls.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable shared provider congestion cooldown and capacity reduction."
+            },
+            "retryOnErrors": {
+              "type": "array",
+              "default": [400, 401, 403, 408, 429, 500, 502, 503, 504, 529],
+              "description": "HTTP status codes eligible for provider handling. Congestion codes 408, 429, 503, and 504 trigger cooldown and capacity reduction.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "maxFallbackAttempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5,
+              "default": 2,
+              "description": "Deprecated compatibility setting. No fallback task call is automatically scheduled."
+            },
+            "cooldownSeconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 600,
+              "default": 30,
+              "description": "Shared provider cooldown in seconds after an eligible congestion failure."
+            },
+            "timeoutSeconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300,
+              "default": 30,
+              "description": "Deprecated compatibility setting. No fallback task call is automatically scheduled."
+            },
+            "notifyOnFallback": {
+              "type": "boolean",
+              "default": true,
+              "description": "Deprecated compatibility setting retained for existing configs."
+            },
+            "providerOrder": {
+              "type": "array",
+              "default": ["copilot", "native"],
+              "description": "Deprecated compatibility setting. Provider routing uses providerMode and categories.routing; failed task calls are not replayed.",
+              "items": {
+                "type": "string",
+                "enum": ["copilot", "native"]
+              }
+            }
+          }
+        },
+        "hooks": {
+          "type": "object",
+          "description": "Hook configuration for orchestration lifecycle events.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "disabled": {
+              "type": "array",
+              "default": [],
+              "description": "List of hook names to disable.",
+              "items": {
+                "type": "string",
+                "examples": [
+                  "task-tracking",
+                  "timeout-enforcement",
+                  "fallback-engine",
+                  "activity-feed"
+                ]
+              }
+            },
+            "telemetry": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable telemetry counters for hook invocations."
+            }
+          }
+        },
+        "notifications": {
+          "type": "object",
+          "description": "Notification buffer settings.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable the notification buffer."
+            },
+            "maxItems": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 500,
+              "default": 100,
+              "description": "Maximum number of notifications to retain."
+            }
+          }
+        },
+        "categories": {
+          "type": "object",
+          "description": "Per-category overrides for provider routing and concurrency limits. Category names are free-form strings (normalized to lowercase at runtime).",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "routing": {
+              "type": "object",
+              "default": {},
+              "description": "Map of category name to provider mode. Overrides the top-level providerMode for tasks in that category.",
+              "additionalProperties": {
+                "type": "string",
+                "enum": ["copilot", "native"]
+              },
+              "examples": [
+                { "quick": "native", "heavy": "copilot" }
+              ]
+            },
+            "maxConcurrent": {
+              "type": "object",
+              "default": {},
+              "description": "Map of category name to max concurrent tasks. Overrides the top-level limits.maxConcurrent for that category.",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              },
+              "examples": [
+                { "quick": 1, "heavy": 2 }
+              ]
+            }
+          }
+        },
+        "recovery": {
+          "type": "object",
+          "description": "Startup recovery configuration for orphaned tasks from prior sessions.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "autoResumeOnStart": {
+              "type": "boolean",
+              "default": true,
+              "description": "Check persisted tasks on startup. Live-owner work stays active; abandoned or legacy queued/retrying work becomes terminal interrupted because task calls cannot be replayed safely."
+            }
+          }
+        },
+        "tmux": {
+          "type": "object",
+          "description": "Tmux session management for subagent tasks. Each OpenCode session gets a dedicated tmux session, and each subagent task gets its own window.",
+          "default": {},
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable tmux session management. Requires tmux to be installed."
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["window", "pane"],
+              "default": "window",
+              "description": "Where delegated task terminals appear. window keeps Fellowship's dedicated agent-session windows; pane splits the current tmux window and applies layout/mainPaneSize for oh-my-opencode-slim style multiplexer parity."
+            },
+            "layout": {
+              "type": "string",
+              "enum": ["main-horizontal", "main-vertical", "tiled", "even-horizontal", "even-vertical"],
+              "default": "main-vertical",
+              "description": "Tmux layout applied after opening or closing task panes when mode is pane. Mirrors slim's tmux multiplexer layout options."
+            },
+            "mainPaneSize": {
+              "type": "integer",
+              "minimum": 20,
+              "maximum": 80,
+              "default": 60,
+              "description": "Main pane percentage for main-horizontal/main-vertical layouts when mode is pane. Equivalent to slim's main_pane_size."
+            },
+            "sessionPrefix": {
+              "type": "string",
+              "default": "fellowship",
+              "minLength": 2,
+              "maxLength": 20,
+              "pattern": "^[a-zA-Z0-9_-]+$",
+              "description": "Prefix for tmux session names. Sessions are named {prefix}-{opencode-session-id}."
+            }
+          }
+        }
+      }
+    }
+  }
+}

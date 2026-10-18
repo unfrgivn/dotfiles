@@ -1,5 +1,4 @@
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "catppuccin-macchiato",
-  "plugin": ["file:///Users/bash/Sites/wpromote/opencode-config/dist/tui.js"]
+  "theme": "catppuccin-macchiato"
 }

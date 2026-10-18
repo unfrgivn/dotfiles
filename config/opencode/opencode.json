@@ -6,6 +6,10 @@
         "type": "local",
         "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--autoConnect"]
       },
+      "sentry": {
+        "type": "remote",
+        "url": "https://mcp.sentry.dev/mcp"
+      },
       // "miro-mcp": {
       //  "type": "remote",
       //  "url": "https://mcp.miro.com/",
@@ -22,12 +26,16 @@
     {"action": "skill", "resource": "*", "effect": "allow"},
     {"action": "webfetch", "resource": "*", "effect": "allow"},
     {"action": "external_directory", "resource": "~/.cache/opencode/**", "effect": "allow"},
-    {"action": "external_directory", "resource": "~/.config/opencode/**", "effect": "allow"}
+    {"action": "external_directory", "resource": "~/.config/opencode/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "~/.local/share/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "/private/tmp/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "/private/var/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "/tmp/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "/var/folders/**", "effect": "allow"},
+    {"action": "external_directory", "resource": "/var/tmp/**", "effect": "allow"}
   ],
   "plugins": [
     // "@tarquinen/opencode-dcp@latest",
-    // "file:///Users/bash/Sites/wpromote/opencode-config/dist/index.js"
+    "@unfrgivn/opencode-config@latest"
   ]
-  //"plugin": ["/Users/bash/Sites/wpromote/opencode-config"]
-  // "plugin": ["@wpro-eng/opencode-config@v1.15.0"]
 }
