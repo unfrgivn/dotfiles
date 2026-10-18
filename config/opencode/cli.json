@@ -9,6 +9,9 @@
     "thinking": "show"
   },
   "animations": true,
+  "prompt": {
+    "paste": "full"
+  },
   "tabs": {
     "enabled": false,
     "layout": "vertical",

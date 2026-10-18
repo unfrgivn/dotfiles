@@ -17,9 +17,6 @@
       //}
     }
   },
-  "experimental": {
-    "disable_paste_summary": true
-  },
   "permissions": [
     {"action": "lsp", "resource": "*", "effect": "allow"},
     {"action": "question", "resource": "*", "effect": "allow"},
